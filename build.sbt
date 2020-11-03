@@ -6,12 +6,15 @@ version := "0.1"
 
 scalaVersion := "2.13.1"
 
-lazy val anormVersion = "2.6.5"
+val anormVersion = "2.6.5"
 
 libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
 
 libraryDependencies += "org.playframework.anorm" %% "anorm" % anormVersion
 
-// all in UTF-8!!!
+libraryDependencies += "com.h2database" % "h2" % "1.4.200" % Test
 
-javacOptions ++= Seq( "-encoding", "UTF-8" )
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.2" % Test
+
+// all in UTF-8!!!
+javacOptions ++= Seq("-encoding", "UTF-8")
