@@ -8,7 +8,7 @@ import scala.annotation.StaticAnnotation
 import scala.reflect.macros.blackbox
 
 /**
-  * Helper для DAO <br/>
+  * Helper for DAO <br/>
   * Usage
   * {{{
   *   case class Person(id : Option[Long], name : String, birthDate : Date)
@@ -110,7 +110,7 @@ trait QueryHelper[T] {
 }
 
 /**
-  * Macro magic для конструирования объекта  QueryHelper[T] для case class T
+  * Macro magic for constructing QueryHelper[T]
   *
   */
 object QueryHelper {
@@ -132,8 +132,6 @@ object QueryHelper {
       val name = field.asTerm.name
       val key = name.decodedName.toString
       val returnType = tpe.decl(name).typeSignature
-
-      //val fieldName = field.annotations.find(a => a.tree.tpe.<:<(weakTypeOf[ru.dimonz80.field])).map(a => a.tree.children.tail.head.toString).getOrElse(name.decodedName.toString).replace("\"","")
 
       (q"$key -> t.$name", q"map($key).asInstanceOf[$returnType]")
     }.unzip
@@ -166,11 +164,7 @@ object QueryHelper {
     val paramsPairs = q"""(..${fieldNames.filter(_.name != "id").map(f => f.tableFieldName + " = {" + f.name + "}").mkString(",")})"""
 
     val constructorParams = fields.map { case (field, _) =>
-      val name = field.asTerm.name
-      val key = name.decodedName.toString
-      val returnType = tpe.decl(name).typeSignature
-
-      q"$name"
+      q"${field.asTerm.name}"
     }
 
     def makeParser(fields: List[(c.universe.Symbol, Option[String])]): Tree = {
@@ -188,7 +182,6 @@ object QueryHelper {
     }
 
     val anormParser = q"${makeParser(fields)}"
-
 
 
     val expr =
@@ -250,17 +243,36 @@ object QueryHelper {
 
       }
     """
-    //    println(showCode(expr))
+
     c.Expr[QueryHelper[T]](expr)
   }
 
 }
 
+/**
+  * Annotation for assign table name
+  *
+  * @param name
+  */
 final class table(name: String) extends StaticAnnotation
 
+/**
+  * Annotation for assign schema
+  *
+  * @param name
+  */
 final class schema(name: String) extends StaticAnnotation
 
+
+/**
+  * Annotation for override field name
+  *
+  * @param name
+  */
 final class field(name: String) extends StaticAnnotation
 
+/**
+  * Annotation for ignoring field
+  */
 final class ignored extends StaticAnnotation
 
