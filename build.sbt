@@ -4,9 +4,9 @@ organization := "ru.dimonz80"
 
 version := "0.1"
 
-scalaVersion := "2.12.8"
+scalaVersion := "2.13.1"
 
-lazy val anormVersion = "2.6.2"
+lazy val anormVersion = "2.6.5"
 
 libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
 
